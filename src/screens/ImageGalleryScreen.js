@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, StyleSheet, ScrollView } from 'react-native';
+import { Image, View, StyleSheet, ScrollView, PermissionsAndroid } from 'react-native';
 import TextInput from '../components/TextInput';
 import autoBind from 'react-autobind';
 import ImageList from '../components/ImageList';
@@ -16,6 +16,19 @@ class ImageGalleryScreen extends React.Component {
         autoBind(this);
     }
     async componentDidMount() {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                    title: 'Image Download Permission',
+                    message: 'Your permission is required to save images to your device',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                }
+            );
+        } catch (err) {
+            console.warn(err);
+        }
         const { default: image1 } = await import('../../assets/images/flowers.png')
         const { default: image2 } = await import('../../assets/images/flowers123.jpg')
         const { default: image3 } = await import('../../assets/images/dog2.jpg')
